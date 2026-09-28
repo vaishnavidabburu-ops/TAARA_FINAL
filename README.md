@@ -34,3 +34,4 @@ The GIS layer supports GeoJSON and contains district/mandal fields. Risk colours
 
 ## Important
 For SIH demonstration, say that the GIS geometry is sourced from the AP state GIS service. The vulnerability score is a prototype placeholder until validated demographic/health/exposure datasets are integrated. Ward-level geometry is not fabricated; it is marked as the next integration step.
+# TAARA_FINAL
