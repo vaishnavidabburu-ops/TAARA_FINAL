@@ -1,0 +1,6 @@
+const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
+export function heatIndexC(tempC,rh){const T=tempC*9/5+32,R=rh;const simple=.5*(T+61+(T-68)*1.2+R*.094);if(simple<80)return ((simple+T)/2-32)*5/9;let h=-42.379+2.04901523*T+10.14333127*R-.22475541*T*R-.00683783*T*T-.05481717*R*R+.00122874*T*T*R+.00085282*T*R*R-.00000199*T*T*R*R;if(R<13&&T>=80&&T<=112)h-=((13-R)/4)*Math.sqrt((17-Math.abs(T-95))/17);else if(R>85&&T>=80&&T<=87)h+=((R-85)/10)*((87-T)/5);return (h-32)*5/9}
+export function wetBulbC(t,r){const R=clamp(r,5,99);return t*Math.atan(.151977*Math.sqrt(R+8.313659))+Math.atan(t+R)-Math.atan(R-1.676331)+.00391838*Math.pow(R,1.5)*Math.atan(.023101*R)-4.686035}
+export function thermal(t,r,w,s){const hi=heatIndexC(t,r),wb=wetBulbC(t,r);const hiC=clamp((hi-27)/18,0,1)*60,wbC=clamp((wb-20)/12,0,1)*20,solar=clamp(s/900,0,1)*12,wind=clamp(w/25,0,1)*8;return {heatIndex:hi,wetBulb:wb,hiC,wbC,solar,wind,env:clamp(hiC+wbC+solar-wind,0,92)}}
+export function combined(t,r,w,s,v){const x=thermal(t,r,w,s);const score=Math.round(clamp(x.env*.65+v*.35,0,100));const level=score>=80?'Extreme':score>=60?'High':score>=40?'Moderate':'Low';return {...x,score,level,vulnerability:v}}
+export function levelColor(l){return {Low:'#16a34a',Moderate:'#eab308',High:'#f97316',Extreme:'#dc2626'}[l]||'#64748b'}
